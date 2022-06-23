@@ -2,6 +2,8 @@
 import httpx
 from environs import Env
 
+from datetime import datetime
+
 env = Env()
 env.read_env()
 
@@ -30,8 +32,11 @@ def call_issues_endpoint(owner, repo, state="all"):
         item['user'] = item['user']['login']
         item['repo'] = f"{owner}/{repo}"
         item['assignee'] = item['assignee']['login'] if item['assignee'] != None else None
-        item['assignees'] = [_['login'] for _ in item['assignees']]
-        item['labels'] = [_['name'] for _ in item['labels']]
+        item['assignees'] = ",".join([_['login'] for _ in item['assignees']])
+        item['labels'] = ",".join([_['name'] for _ in item['labels']])
+        item['created_at'] = datetime.strptime(item['created_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S')
+        item['updated_at'] = datetime.strptime(item['updated_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S')
+        item['closed_at'] = datetime.strptime(item['closed_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S') if item['closed_at'] != None else None
 
     return data
 
@@ -54,7 +59,11 @@ def call_pulls_endpoint(owner, repo, state="all"):
         item['user'] = item['user']['login']
         item['repo'] = f"{owner}/{repo}"
         item['assignee'] = item['assignee']['login'] if item['assignee'] != None else None
-        item['assignees'] = [_['login'] for _ in item['assignees']]
-        item['labels'] = [_['name'] for _ in item['labels']]
+        item['assignees'] = ",".join([_['login'] for _ in item['assignees']])
+        item['labels'] = ",".join([_['name'] for _ in item['labels']])
+        item['created_at'] = datetime.strptime(item['created_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S')
+        item['updated_at'] = datetime.strptime(item['updated_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S')
+        item['closed_at'] = datetime.strptime(item['closed_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S') if item['closed_at'] != None else None
+        item['merged_at'] = datetime.strptime(item['merged_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S') if item['merged_at'] != None else None
 
     return data
