@@ -1,6 +1,7 @@
 
 import pandas as pd
 from fastapi import FastAPI
+from fastapi.responses import Response
 
 
 from src.util import REPOS, OWNER
@@ -28,7 +29,7 @@ async def fetch_issues():
     df = pd.DataFrame(accumulator)
     csv = df.to_csv(index=False, encoding='utf-8', columns=column_filter)
 
-    return csv
+    return Response(csv)
 
 @app.get("/pulls")
 async def fetch_pulls():
@@ -47,4 +48,4 @@ async def fetch_pulls():
     df = pd.DataFrame(accumulator)
     csv = df.to_csv(index=False, encoding='utf-8', columns=column_filter)
     
-    return csv
+    return Response(csv)
