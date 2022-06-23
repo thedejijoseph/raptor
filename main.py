@@ -41,7 +41,6 @@ async def fetch_pulls():
     ]
 
     for repo in REPOS:
-        print(repo)
         pull_requests = call_pulls_endpoint(OWNER, repo)
         accumulator.extend(pull_requests)
     
