@@ -8,6 +8,7 @@ pandas = "*"
 fastapi = "*"
 environs = "*"
 uvicorn = {extras = ["standard"], version = "*"}
+httpx = "*"
 
 [dev-packages]
 
