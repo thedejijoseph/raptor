@@ -1,7 +1,6 @@
 
 import pandas as pd
 from fastapi import FastAPI
-from pyparsing import col
 
 
 from src.util import REPOS, OWNER
@@ -11,7 +10,7 @@ app = FastAPI()
 
 @app.get("/")
 async def read_root():
-    return {"message": "Raptor Server v0.1"}
+    return {"message": "raptor server v0.1"}
 
 @app.get("/issues")
 async def fetch_issues():
