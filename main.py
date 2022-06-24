@@ -19,7 +19,8 @@ async def fetch_issues():
     column_filter = [
         "url", "id", "number", "state", "locked", "title",
         "body", "created_at", "updated_at", "closed_at",
-        "assignee", "assignees", "labels", "milestone", "repo", "user"
+        "assignee", "assignees", "labels", "milestone", "repo",
+        "user", "is_pr", "pr_number"
     ]
 
     for repo in REPOS:

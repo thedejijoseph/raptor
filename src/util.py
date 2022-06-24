@@ -37,6 +37,8 @@ def call_issues_endpoint(owner, repo, state="all"):
         item['created_at'] = datetime.strptime(item['created_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S')
         item['updated_at'] = datetime.strptime(item['updated_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S')
         item['closed_at'] = datetime.strptime(item['closed_at'], '%Y-%m-%dT%H:%M:%SZ').strftime('%-m/%-d/%Y %H:%M:%S') if item['closed_at'] != None else None
+        item['is_pr'] = True if item.get('pull_request', None) != None else False
+        item['pr_number'] = item['number'] if item['is_pr'] else None
 
     return data
 
