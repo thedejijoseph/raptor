@@ -14,7 +14,23 @@ async def read_root():
     return {"message": "raptor server v0.1"}
 
 @app.get("/issues")
-async def fetch_issues():
+async def fetch_issues(repos: str='', force: int=0):
+    """Fetch all issues from pre-defined list of repos.
+
+    List of repos can be modified by setting the optional `repos` query parameter.
+    For example: ?repos=server,sync-server
+
+    This list will be added to the pre-defined list of repos.
+
+    The pre-defined list of repos can be overwritten by setting the `force` query parameter.
+    For example: ?force=1
+
+    0: False | Do not overwrite pre-defined list
+    1: True | Overwrite pre-defined list
+
+    Default is 0.
+    """
+
     accumulator = []
     column_filter = [
         "url", "id", "number", "state", "locked", "title",
@@ -23,7 +39,11 @@ async def fetch_issues():
         "user", "is_pr", "pr_number"
     ]
 
-    for repo in REPOS:
+    list_of_repos = repos.split(',')
+    if not force:
+        list_of_repos.extend(REPOS)
+
+    for repo in list_of_repos:
         issues = call_issues_endpoint(OWNER, repo)
         accumulator.extend(issues)
     
@@ -33,7 +53,23 @@ async def fetch_issues():
     return Response(csv)
 
 @app.get("/pulls")
-async def fetch_pulls():
+async def fetch_pulls(repos: str='', force: int=0):
+    """Fetch all pull requests from pre-defined list of repos.
+
+    List of repos can be modified by setting the optional `repos` query parameter.
+    For example: ?repos=server,sync-server
+
+    This list will be added to the pre-defined list of repos.
+
+    ---
+    The pre-defined list of repos can be overwritten by setting the `force` query parameter.
+    For example: ?force=1
+
+    0: False | Do not overwrite pre-defined list
+    1: True | Overwrite pre-defined list
+
+    Default is 0.
+    """
     accumulator = []
     column_filter = [
         "url", "id", "number", "state", "locked", "title",
@@ -41,7 +77,11 @@ async def fetch_pulls():
         "assignee", "assignees", "labels", "milestone", "repo", "user"
     ]
 
-    for repo in REPOS:
+    list_of_repos = repos.split(',')
+    if not force:
+        list_of_repos.extend(REPOS)
+
+    for repo in list_of_repos:
         pull_requests = call_pulls_endpoint(OWNER, repo)
         accumulator.extend(pull_requests)
     
