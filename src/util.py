@@ -26,6 +26,9 @@ def call_issues_endpoint(owner, repo, state="all"):
     resp = httpx.get(f"https://api.github.com/repos/{owner}/{repo}/issues", headers=headers, params=query_params)
     data = resp.json()
 
+    if data == []:
+        return data
+    
     if resp.status_code not in (200, 304):
         # log an error here
         return []
@@ -69,6 +72,9 @@ def call_pulls_endpoint(owner, repo, state="all"):
     resp = httpx.get(f"https://api.github.com/repos/{owner}/{repo}/pulls", headers=headers, params=query_params)
     data = resp.json()
 
+    if data == []:
+        return data
+    
     if resp.status_code not in (200, 304):
         # log an error here
         return []
