@@ -136,8 +136,18 @@ def prop_date(prop: dict) -> str:
     date_field = prop.get('date', None)
     if date_field is not None:
         start_date = date_field.get('start')
+        if "+" in start_date:
+            # assume that date_field includes time offset / timezone
+            parsed = datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S.%f%z')
+        elif "T" in start_date and "Z" not in start_date:
+            # assume that date_field inclues time but not time offset
+            parsed = datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S')
+        else:
+            # assume date_field is just date
+            parsed = datetime.strptime(start_date, '%Y-%m-%d')
         
-        # parsed = datetime.strptime(start_date, '%Y-%m-%dT%H:%M:%S.%f+%z')
+        start_date = datetime.strftime(parsed, '%Y-%m-%dT%H:%M:%S')
+
         return start_date
     else:
         return ''
@@ -183,8 +193,13 @@ def prop_rollup(prop):
 
 def prop_created_time(prop: dict) -> str:
     """Parse Created Time property"""
+    
+    created_time = prop.get('created_time', '')
+    if created_time is not '':
+        parsed = datetime.strptime(created_time, '%Y-%m-%dT%H:%M:%S.%f%z')
+        created_time = datetime.strftime(parsed, '%Y-%m-%dT%H:%M:%S')
 
-    return prop.get('created_time', '')
+    return created_time
 
 def prop_created_by(prop):
     pass
