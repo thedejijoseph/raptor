@@ -15,7 +15,7 @@ app = FastAPI()
 async def read_root():
     return {"message": "raptor server v0.1"}
 
-@app.get("/issues")
+@app.get("/github/issues")
 async def fetch_issues(repos: str='', force: int=0):
     """Fetch all issues from pre-defined list of repos.
 
@@ -54,7 +54,7 @@ async def fetch_issues(repos: str='', force: int=0):
 
     return Response(csv)
 
-@app.get("/pulls")
+@app.get("/github/pulls")
 async def fetch_pulls(repos: str='', force: int=0):
     """Fetch all pull requests from pre-defined list of repos.
 
