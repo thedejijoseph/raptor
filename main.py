@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from fastapi.responses import Response
 
 
-from src.util import REPOS, OWNER
-from src.util import call_issues_endpoint, call_pulls_endpoint
+from src.github_util import REPOS, OWNER
+from src.github_util import call_issues_endpoint, call_pulls_endpoint
 
 from src.notion_util import DEFAULT_DB, fetch_notion_database
 
