@@ -9,6 +9,8 @@ fastapi = "*"
 environs = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 httpx = "*"
+notion-client = "*"
+ipython = "*"
 
 [dev-packages]
 
