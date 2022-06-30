@@ -75,7 +75,9 @@ def property_handler(property_type: str) -> Callable:
         "rich_text": prop_rich_text,
         "date": prop_date,
         "multi_select": prop_multi_select,
-        "number": prop_number
+        "number": prop_number,
+        "created_time": prop_created_time,
+        "people": prop_people
     }
 
     return handler.get(property_type, None)
@@ -140,8 +142,17 @@ def prop_date(prop: dict) -> str:
     else:
         return ''
 
-def prop_people(prop):
-    pass
+def prop_people(prop: dict) -> str:
+    """Parse People property"""
+
+    people_field = prop.get('people', [])
+
+    if people_field is not []:
+        people_field = [block.get('name', '') for block in people_field]
+
+        return ', '.join(people_field)
+    
+    return ', '.join(people_field)
 
 def prop_files(prop):
     pass
@@ -170,8 +181,10 @@ def prop_relation(prop):
 def prop_rollup(prop):
     pass
 
-def prop_created_time(prop):
-    pass
+def prop_created_time(prop: dict) -> str:
+    """Parse Created Time property"""
+
+    return prop.get('created_time', '')
 
 def prop_created_by(prop):
     pass
