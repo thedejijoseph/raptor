@@ -7,6 +7,8 @@ from fastapi.responses import Response
 from src.util import REPOS, OWNER
 from src.util import call_issues_endpoint, call_pulls_endpoint
 
+from src.notion_util import DEFAULT_DB, fetch_notion_database
+
 app = FastAPI()
 
 @app.get("/")
@@ -88,4 +90,17 @@ async def fetch_pulls(repos: str='', force: int=0):
     df = pd.DataFrame(accumulator)
     csv = df.to_csv(index=False, encoding='utf-8', columns=column_filter)
     
+    return Response(csv)
+
+@app.get("/notion/database")
+async def notion_database(id: str=DEFAULT_DB) -> Response:
+    """Fetch all records from a pre-determined Notion Database.
+    
+    The target Notion Database can be modified by setting the optional `id` parameter.
+    """
+
+    database = fetch_notion_database(id)
+    df = pd.DataFrame(database)
+    csv = df.to_csv(index=False, encoding='utf-8')
+
     return Response(csv)

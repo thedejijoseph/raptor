@@ -19,6 +19,14 @@ notion = Client(
 
 DEFAULT_DB = env.str('NOTION_DEFAULT_DATABASE', None)
 
+def fetch_notion_database(database_id: str):
+    """Retrieve and parse Notion Database"""
+
+    fetched_db = get_database(database_id)
+    parsed_db = parse_database(fetched_db)
+
+    return parsed_db
+
 def get_database(database_id: str = DEFAULT_DB) -> list:
     """Retrieve all rows from a Notion Database
     
@@ -40,7 +48,7 @@ def get_database(database_id: str = DEFAULT_DB) -> list:
         return accumulator
 
     except APIResponseError as error:
-        logging.error(error.body['message'])
+        logging.error(error.body)
         return []
 
 def parse_database(records: list):
