@@ -41,8 +41,11 @@ def get_database(database_id: str = DEFAULT_DB) -> list:
     
     try: 
         response = notion.databases.query(**query)
-        if response['has_more']:
-            logging.info('This database has more items, but they are not being fetched')
+        while response['has_more']:
+            query['start_cursor'] = response['next_cursor']
+            response = notion.databases.query(**query)
+
+            accumulator.extend(response['results'])
         
         accumulator.extend(response['results'])
         return accumulator
@@ -195,7 +198,7 @@ def prop_created_time(prop: dict) -> str:
     """Parse Created Time property"""
     
     created_time = prop.get('created_time', '')
-    if created_time is not '':
+    if created_time != '':
         parsed = datetime.strptime(created_time, '%Y-%m-%dT%H:%M:%S.%f%z')
         created_time = datetime.strftime(parsed, '%Y-%m-%dT%H:%M:%S')
 
