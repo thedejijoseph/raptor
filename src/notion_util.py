@@ -41,13 +41,14 @@ def get_database(database_id: str = DEFAULT_DB) -> list:
     
     try: 
         response = notion.databases.query(**query)
+        accumulator.extend(response['results'])
+        
         while response['has_more']:
             query['start_cursor'] = response['next_cursor']
             response = notion.databases.query(**query)
 
             accumulator.extend(response['results'])
         
-        accumulator.extend(response['results'])
         return accumulator
 
     except APIResponseError as error:
