@@ -80,7 +80,8 @@ def property_handler(property_type: str) -> Callable:
         "multi_select": prop_multi_select,
         "number": prop_number,
         "created_time": prop_created_time,
-        "people": prop_people
+        "people": prop_people,
+        "email": prop_email
     }
 
     return handler.get(property_type, None)
@@ -180,7 +181,10 @@ def prop_url(prop: dict) -> str:
     return url
 
 def prop_email(prop):
-    pass
+    """Parse Email property"""
+
+    email = prop.get('email', '')
+    return email
 
 def prop_phone_number(prop):
     pass
