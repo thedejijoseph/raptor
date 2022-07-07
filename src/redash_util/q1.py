@@ -202,4 +202,4 @@ def result(start_date: datetime, end_date: datetime):
         data = df.to_csv(index=False, encoding='utf-8')
         return data
     else:
-        return []
+        return ""
