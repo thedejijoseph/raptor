@@ -104,3 +104,17 @@ async def notion_database(id: str=DEFAULT_DB) -> Response:
     csv = df.to_csv(index=False, encoding='utf-8')
 
     return Response(csv)
+
+@app.get("/redash")
+async def redash_info(q: int=None) -> Response:
+    """Return a descriptive message for this set of queries: /redash/*
+    
+    When query parameter `q` is provided, help message belonging to that particular query is returned.
+    Example /redash?q=1
+    """
+
+    response = {"message": "Run redash-like queries"}
+    if q:
+        response['message'] = "No queries exist yet."
+    
+    return response
