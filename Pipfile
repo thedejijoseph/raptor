@@ -11,6 +11,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 httpx = "*"
 notion-client = "*"
 ipython = "*"
+pymongo = {extras = ["srv"], version = "*"}
 
 [dev-packages]
 
