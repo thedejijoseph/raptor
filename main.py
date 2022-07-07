@@ -1,13 +1,18 @@
 
+from datetime import datetime
+from importlib import import_module
+
 import pandas as pd
 from fastapi import FastAPI
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
 
 
 from src.github_util import REPOS, OWNER
 from src.github_util import call_issues_endpoint, call_pulls_endpoint
 
 from src.notion_util import DEFAULT_DB, fetch_notion_database
+
+from src.redash_util import q1
 
 app = FastAPI()
 
@@ -115,6 +120,18 @@ async def redash_info(q: int=None) -> Response:
 
     response = {"message": "Run redash-like queries"}
     if q:
-        response['message'] = "No queries exist yet."
+        query = import_module(f'src.redash_util.q{q}')
+        info = query.info()
+
+        response = JSONResponse(info)
     
+    return response
+
+@app.get("/redash/1")
+async def run_redash_query(start_date: datetime, end_date: datetime):
+    """Run query with id: 1"""
+
+    result = q1.result(start_date, end_date)
+
+    response = Response(result)
     return response
