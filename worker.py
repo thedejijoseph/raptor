@@ -1,10 +1,15 @@
 
 from datetime import datetime, timedelta
+from typing import Union
 
 from src.redash_util import q1
+from src.db_util import results_insert
 
-def remove_timestamp(date: datetime) -> datetime:
-    return datetime(date.year, date.month, date.day)
+def remove_timestamp(date: datetime, text:bool = True) -> Union[datetime, str]:
+    if text:
+        return f"{date.year}-{date.month}-{date.day}"
+    else:
+        return datetime(date.year, date.month, date.day)
 
 def run_query():
 
@@ -22,14 +27,23 @@ def run_query():
 
     key = f"{remove_timestamp(lastweek_start)}_{remove_timestamp(lastweek_end)}"
 
-    return {key: result}
+    return key, result
 
 def cache_results(key, result):
-    pass
+    """Write query result to the database"""
+
+    status = results_insert(key, result, datetime.now())
+    if status > 0:
+        # log success
+        pass
+    else:
+        # log error
+        pass
 
 def run_service():
-    pass
+    key, result = run_query()
+    cache_results(key, result)
+
 
 if __name__ == "__main__":
     run_service()
-

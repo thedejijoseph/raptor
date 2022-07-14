@@ -12,6 +12,8 @@ httpx = "*"
 notion-client = "*"
 ipython = "*"
 pymongo = {extras = ["srv"], version = "*"}
+sqlalchemy = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
