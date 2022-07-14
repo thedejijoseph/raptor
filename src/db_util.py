@@ -7,9 +7,9 @@ from sqlalchemy import create_engine, Table, Column, Integer, String, DateTime, 
 env = Env()
 env.read_env()
 
-PG_URI = env('DATABASE')
+PG_URI = env('DATABASE_URL').replace('postgres', 'postgresql')
 
-engine = create_engine(f'postgresql://{PG_URI}')
+engine = create_engine(f'{PG_URI}', connect_args={'sslmode': 'require'})
 
 meta = MetaData()
 

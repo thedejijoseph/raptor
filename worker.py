@@ -10,7 +10,7 @@ env.read_env()
 
 listen = ['high', 'default', 'low']
 
-redis_url = env('REDIS', default='redis://localhost:6379')
+redis_url = env('REDIS_URL', default='redis://localhost:6379')
 
 conn = redis.from_url(redis_url)
 
