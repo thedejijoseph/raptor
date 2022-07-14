@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, Table, Column, Integer, String, DateTime, 
 env = Env()
 env.read_env()
 
-PG_URI = env('PG_URI')
+PG_URI = env('DATABASE')
 
 engine = create_engine(f'postgresql://{PG_URI}')
 
@@ -45,5 +45,5 @@ def results_insert(key:str, result:str, created_at:datetime):
         return result.rowcount
     except:
         # raise
-        
+
         return 0
