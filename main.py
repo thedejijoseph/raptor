@@ -1,4 +1,5 @@
 
+from audioop import add
 from datetime import datetime
 from importlib import import_module
 
@@ -15,7 +16,7 @@ from src.redash_util import q1
 
 from src.db_util import results_select
 
-from service import get_lastweek_dates, make_cache_key
+from service import get_lastweek_dates, make_cache_key, add_service_to_queue
 
 app = FastAPI()
 
@@ -150,3 +151,21 @@ async def fetch_cached_churn_lastweek():
 
     response = Response(result)
     return response
+
+@app.post("/redash/cached/churn-lastweek")
+async def fetch_cached_churn_lastweek():
+    """Run and cache query (churn for last week)"""
+    
+    try:
+        add_service_to_queue()
+        response = {
+            "message": "successfully started query"
+        }
+
+        return response
+    except:
+        # log, probably raise
+        response = {
+            "message": "failed to start query"
+        }
+        return response
