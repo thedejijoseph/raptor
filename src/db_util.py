@@ -2,6 +2,7 @@
 from datetime import datetime
 from environs import Env
 from sqlalchemy import create_engine, Table, Column, Integer, String, DateTime, MetaData
+from sqlalchemy import desc
 
 
 env = Env()
@@ -27,7 +28,7 @@ RESULTS = Table(
 meta.create_all(engine)
 
 
-def results_insert(key:str, result:str, created_at:datetime):
+def results_insert(key:str, result:str, created_at:datetime) -> int:
     """Insert new data into the RESULTS table.
     """
 
@@ -47,3 +48,22 @@ def results_insert(key:str, result:str, created_at:datetime):
         # raise
 
         return 0
+
+def results_select(key: str) -> str:
+    """Select the 'last' row matching key"""
+    
+    try:
+        conn = engine.connect()
+        select_stmt = RESULTS.select()\
+            .where(RESULTS.c.key==key)\
+            .order_by(desc(RESULTS.c.created_at))
+        result = conn.execute(select_stmt)
+        if result != None:
+            id, cached_key, cached_results, created_at = result.fetchone()
+            return cached_results
+        else:
+            return ""
+    except:
+        # raise & log
+
+        return ""
