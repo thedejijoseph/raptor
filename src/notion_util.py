@@ -92,7 +92,7 @@ def prop_title(prop: dict) -> str:
 
     title_field = prop.get('title', None)
     plain_text = ""
-    if type(title_field) is not list:
+    if type(title_field) is not list or title_field == []:
         logging.debug("title field not found")
         return plain_text
 
