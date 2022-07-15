@@ -6,13 +6,16 @@ import pandas as pd
 from fastapi import FastAPI
 from fastapi.responses import Response, JSONResponse
 
-
 from src.github_util import REPOS, OWNER
 from src.github_util import call_issues_endpoint, call_pulls_endpoint
 
 from src.notion_util import DEFAULT_DB, fetch_notion_database
 
 from src.redash_util import q1
+
+from src.db_util import results_select
+
+from service import get_lastweek_dates, make_cache_key
 
 app = FastAPI()
 
@@ -132,6 +135,18 @@ async def run_redash_query(start_date: datetime, end_date: datetime):
     """Run query with id: 1"""
 
     result = q1.result(start_date, end_date)
+
+    response = Response(result)
+    return response
+
+@app.get("/redash/cached/churn-lastweek")
+async def fetch_cached_churn_lastweek():
+    """Fetch DB-cached churn for last week"""
+    
+    lastweek_start, lastweek_end = get_lastweek_dates()
+    key = make_cache_key(lastweek_start, lastweek_end)
+
+    result = results_select(key=key)
 
     response = Response(result)
     return response

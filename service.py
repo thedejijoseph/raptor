@@ -1,7 +1,7 @@
 
 from datetime import datetime, timedelta
 import logging
-from typing import Union
+from typing import Union, Tuple
 from logging import Logger
 
 from rq import Queue
@@ -20,7 +20,8 @@ def remove_timestamp(date: datetime, text:bool = True) -> Union[datetime, str]:
     else:
         return datetime(date.year, date.month, date.day)
 
-def run_query():
+def get_lastweek_dates() -> Tuple[datetime, datetime]:
+    """Return start and end dates for last week"""
 
     # get last week's start and end
     today = datetime.today()
@@ -32,9 +33,19 @@ def run_query():
     lastweek_end = lastweek_start + timedelta(days=6)
     lastweek_end = lastweek_end.replace(hour=23, minute=59, second=59, microsecond=0)
 
+    return lastweek_start, lastweek_end
+
+def make_cache_key(start:datetime, end:datetime) -> str:
+    """Return a concatenation of datetimes as a cache key"""
+
+    key = f"{remove_timestamp(start)}_{remove_timestamp(end)}"
+    return key
+
+def run_query():
+    lastweek_start, lastweek_end = get_lastweek_dates()
     result = q1.result(lastweek_start, lastweek_end)
 
-    key = f"{remove_timestamp(lastweek_start)}_{remove_timestamp(lastweek_end)}"
+    key = make_cache_key(lastweek_start, lastweek_end)
 
     return key, result
 
